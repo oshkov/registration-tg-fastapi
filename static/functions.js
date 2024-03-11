@@ -33,7 +33,7 @@ function preview(MAX_MB_SIZE, MAX_PHOTO_AMOUNT) {
             num += 1
         }
 
-        document.getElementById('input-file-btn').textContent = `Выбрано ${amountPhotos} фото`
+        document.getElementById('input-file-btn').textContent = 'Выбрать другие фото'
 
     } else {
         alert(`Нельзя загружать более ${MAX_PHOTO_AMOUNT} фото!`)
@@ -43,115 +43,36 @@ function preview(MAX_MB_SIZE, MAX_PHOTO_AMOUNT) {
 }
 
 
-// Функция вывода результатов поиска
-function autocompleteCity(input, array) {
+let citySelected = false        // Переменная для показа, что город был выбран из списка предложенного
 
-	// Вывод результатов при клике
-    input.addEventListener("click", function() {
-        // Закрытие прошлых результатов
-        closeAllLists()
-        let listResults = document.querySelector(".autocomplete-items")
-		let inputValue = input.value
-
-		// Затемнение тени под поиском
-		document.querySelector(".autocomplete").style = 'filter: drop-shadow(0px 5px 17px rgba(34, 60, 80, 0.2))'
-
-		// Если строка поиска пуста, то результаты не выводятся
-		if (inputValue === '') {
-			return
-		}
-
-        // Поиск по массиву
-		let num = 0		// Счетчик для кнопок результатов
-        for (i = 0; i < array.length; i++) {
-            // Проверка на совпадение
-            if (array[i].substr(0, inputValue.length).toUpperCase() == inputValue.toUpperCase()) {
-				// Скругление полей поиска
-                input.style = 'border-radius: 22px 22px 0px 0px;'
-
-                // Добавление блока
-                let htmlCity = `<div class="city city-${i}" id="${i}">${array[i]}</div>`
-                listResults.insertAdjacentHTML('beforeend', htmlCity);
-
-				let result = document.getElementsByClassName('city')
-				result[num].addEventListener("click", function() {
-					console.log(this.id);
-					input.value = array[this.id]
-				});
-				num++
-            }
-        }
-
-		try {
-			// Сглаживание нижних краев последнего результата для красоты
-			resultArray = document.querySelectorAll('.city')
-			lastResult = resultArray[resultArray.length-1]
-			lastResult.style = 'border-radius: 0px 0px 22px 22px'
-		} catch (error) {
-			return
-		}
-    })
-
-
-	// Вывод результатов при вводе
-    input.addEventListener("input", function() {
-        // Закрытие прошлых результатов
-        closeAllLists()
-        let listResults = document.querySelector(".autocomplete-items")
-		let inputValue = input.value
-
-		// Затемнение тени под поиском
-		document.querySelector(".autocomplete").style = 'filter: drop-shadow(0px 5px 17px rgba(34, 60, 80, 0.2))'
-
-        // Поиск по массиву
-		let num = 0		// Счетчик для кнопок результатов
-        for (i = 0; i < array.length; i++) {
-            // Проверка на совпадение
-            if (array[i].substr(0, inputValue.length).toUpperCase() == inputValue.toUpperCase()) {
-				// Скругление полей поиска
-                input.style = 'border-radius: 22px 22px 0px 0px;'
-
-                // Добавление блока
-                let htmlCity = `<div class="city city-${i}" id="${i}">${array[i]}</div>`
-                listResults.insertAdjacentHTML('beforeend', htmlCity);
-
-				let result = document.getElementsByClassName('city')
-				result[num].addEventListener("click", function() {
-					input.value = array[this.id]
-				});
-				num++
-			}
-		}
-
-		try {
-			// Сглаживание нижних краев последнего результата для красоты
-			resultArray = document.querySelectorAll('.city')
-			lastResult = resultArray[resultArray.length-1]
-			lastResult.style = 'border-radius: 0px 0px 22px 22px'
-		} catch (error) {
-			return
-		}
-    })
-
-
-	// Если клик в любое место сайта, то поиск закрывается
-	document.addEventListener("click", function (e) {
-        closeAllLists(e.target);
-    });
-
-    // Функция очистки списка в случае клика в любое место кроме списка
-    function closeAllLists(element) {
-        if (element != input) {
-
-			// Очистка блока с результатами
-            let cities_list = document.querySelector(".autocomplete-items");
-            cities_list.innerHTML = ''
-
-			// Скругление всех углов поиска
-            input.style = 'border-radius: 22px;'
-			document.querySelector(".autocomplete").style = 'filter: drop-shadow(0px 3px 24px rgba(34, 60, 80, 0.1))'
-
-			// console.log('Список очистился')
-        }
-    }
+function formatSelected(suggestion) {
+	return suggestion.data.city;
 }
+
+$("#city_input").suggestions({
+	token: "18ce8e4f8a4137e861beef9cef2ad278ebf7425a",
+	type: "ADDRESS",
+	hint: false,
+	bounds: "city",
+  	formatSelected: formatSelected,
+	constraints: {
+		locations: {country: "*"}
+	},
+	// Вызывается, когда пользователь выбирает одну из подсказок
+	onSelect: function(suggestion) {
+        citySelected = true
+		// console.log(suggestion.data.city);
+		// console.log(citySelected);
+
+        // Убирается ошибка, если она была
+        inputCity.style = 'border: none'
+        document.getElementById('error_city').textContent = ''
+	}
+});
+$("#city_input").attr("autocomplete", "off");
+
+// При изменении строки ввода города, переменная citySelected изменяется на false
+inputCity.addEventListener("input", function() {
+    citySelected = false
+    // console.log(citySelected);
+})

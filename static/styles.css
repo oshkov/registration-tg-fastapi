@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Roboto+Slab&display=swap');
+@import url("font/stylesheet.css");
+
 * {
     margin: 0;
     padding: 0;
@@ -6,8 +7,8 @@
 
 body {
     text-align: center;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 400;
+    font-family: 'Stem';
+    font-weight: 300;
     color: black;
     background: #F0F0FF;
     max-width: 768px;
@@ -15,26 +16,30 @@ body {
 }
 
 p {
-    margin: 0 0 15px 15%;
+    margin: 0 10% 15px 10%;
     color: #A0A0A0;
     text-align: left;
 }
 
 h1 {
-    font-weight: 800;
+    font-weight: bold;
     text-align: center;
-    margin: 0 10% 5% 10%;
+    margin: 0 10% 3% 10%;
 }
 
 h2 {
-    font-weight: 400;
-    font-size: 18px;
+    font-weight: 300;
+    font-size: 16px;
     margin: 0 10% 5% 10%;
 }
 
 h2.for_input {
     text-align: left;
-    margin: 0 10% 15px 15%;
+    margin: 0 10% 15px 10%;
+}
+
+a {
+    text-decoration: none;
 }
 
 .corbots_logo {
@@ -51,8 +56,9 @@ button {
     margin: 50px 0;
     height: 60px;
     width: 250px;
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 16px;
+    font-family: 'Stem';
+    font-weight: 400;
     cursor: pointer;
     color: white;
     background: #9094FF;
@@ -69,20 +75,25 @@ button:hover {
     box-shadow: 0px 5px 17px 0px rgba(34, 60, 80, 0.2);
 }
 
-p.error {
-    font-weight: 400;
-    color: red;
-    margin: 5px 0 0 15%;
+button#back_to_bot {
+    margin: 0;
 }
 
-::placeholder {
-    color: var(--color, gray);
+button#recreate_form {
+    margin: 0 0 20px 0;
+}
+
+p.error {
+    font-weight: 300;
+    color: red;
+    margin: 5px 15% 0 15%;
 }
 
 input.write {
+    box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
     outline: none;
-    width: 70%;
+    width: 80%;
     padding: 15px 5%;
     font-size: 16px;
     border: none;
@@ -133,14 +144,35 @@ textarea {
     box-shadow: 0px 3px 24px 0px rgba(34, 60, 80, 0.1);
     resize: none;
 }
-/* 
-.form_radio_btn label:hover {
-	background: #e0e0ff;
-} */
 
 #age_form, #gender_form, #city_form, #preferences_form, #target_form, #about_form, #photo_form {
     display: none;
 }
+
+
+.agreement_block {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 10%;
+    margin: 20px 0 0 0;
+}
+
+input.agreement {
+    height: 16px;
+    width: 5%;
+}
+
+label.agreement_text {
+    margin: 0 0 0 3%;
+    width: 92%;
+    color: black;
+    text-align: left;
+}
+
+
+
+
+
 
 
 
@@ -175,6 +207,123 @@ textarea {
     z-index: 1;
     position: relative;
 }
+
+.suggestions-nowrap {
+    white-space: nowrap
+}
+
+.suggestions-input::-ms-clear {
+    display: none
+}
+
+.suggestions-wrapper {
+    position: relative;
+    margin: 5px auto 0 auto;
+    padding: 0;
+    vertical-align: top;
+    -webkit-text-size-adjust: 100%;
+    width: 80%;
+}
+
+.suggestions-suggestions {
+    background: #fff;
+    /* border: 1px solid #999; */
+    filter: drop-shadow(0px 3px 24px rgba(34, 60, 80, 0.1));
+    cursor: default;
+    left: 0;
+    min-width: 100%;
+    max-width: 100%;
+    position: absolute;
+    z-index: 1;
+    -webkit-text-size-adjust: 100%;
+    border-radius: 22px;
+}
+
+.suggestions-suggestions strong {
+    font-weight: bold;
+    color: rgb(0, 0, 0)
+}
+
+.suggestions-suggestions.suggestions-mobile {
+    border-style: none
+}
+
+.suggestions-suggestions.suggestions-mobile .suggestions-suggestion {
+    border-bottom: 1px solid #ddd
+}
+
+.suggestions-suggestion {
+    padding: 12px 15px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.suggestions-suggestion:hover {
+    background: #f7f7f7;
+    border-radius: 22px;
+}
+
+.suggestions-selected {
+    background: #f0f0f0
+}
+
+.suggestions-selected:hover {
+    background: #f0f0f0
+}
+
+.suggestions-hint {
+    padding: 4px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #777;
+    font-size: 85%;
+    line-height: 20px
+}
+
+.suggestions-subtext {
+    color: #777
+}
+
+.suggestions-subtext_inline {
+    display: inline-block;
+    min-width: 6em;
+    vertical-align: bottom;
+    margin: 0 .5em 0 0
+}
+
+.suggestions-subtext-delimiter {
+    display: inline-block;
+    width: 2px
+}
+
+.suggestions-subtext_label {
+    margin: 0 0 0 .25em;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 0 3px;
+    background: #f5f5f5;
+    font-size: 85%
+}
+
+.suggestions-value[data-suggestion-status=LIQUIDATED] {
+    position: relative
+}
+
+.suggestions-value[data-suggestion-status=LIQUIDATED]:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    border-top: 1px solid rgba(0,0,0,.4);
+    content: ""
+}
+
+
+
+
+
+
 
 
 

@@ -1,30 +1,37 @@
 const MAX_MB_PHOTO_SIZE = 5             // Максимальный размер фото в МБ
-const MAX_PHOTO_AMOUNT = 3              // Максимальное количество загруженных фото
-let CITIES_ARRAY = ['Москва', 'Казань', 'Калининград', 'Санкт-Петербург'];
+const MAX_PHOTO_AMOUNT = 5              // Максимальное количество загруженных фото
 let tg = window.Telegram.WebApp
 
-
-// Скрипт для вывода списка городов
-autocompleteCity(document.getElementById("city_input"), CITIES_ARRAY);
 
 // Предпросмотр фото после выбора и проверка на размер фото
 let photoInput = document.getElementById('photo_input')
 photoInput.addEventListener('change', () => preview(MAX_MB_PHOTO_SIZE, MAX_PHOTO_AMOUNT))
 
 
+// Убирается ошибка при вводе данных
+let inputUsername = document.getElementById('username_input')
+inputUsername.addEventListener('input', function () {
+    inputUsername.style = 'border: none'
+    document.getElementById('error_username').textContent = ''
+})
+
 // Переход от запроса имени к запросу возраста
 let continueUsername = document.getElementById('continue_username')
 continueUsername.addEventListener('click', function() {
     // Проверка на ввод имени
-    let inputUsername = document.getElementById('username_input')
     if (inputUsername.value === '') {
         document.getElementById('error_username').textContent = 'Это обязательное поле'
         inputUsername.style = 'border: 2px solid red'
         return
+    } else if (inputUsername.value.includes('http')) {
+        document.getElementById('error_username').textContent = 'Введите свое имя, а не ссылку'
+        inputUsername.style = 'border: 2px solid red'
+        return
+    } else if (inputUsername.value.includes('.')) {
+        document.getElementById('error_username').textContent = 'Введите свое имя'
+        inputUsername.style = 'border: 2px solid red'
+        return
     }
-
-    // Убирается лого
-    document.getElementById('corbots_logo').style.display = 'none'
 
     // Переход на следующий вопрос
     document.getElementById('username_form').style.display = 'none'
@@ -32,11 +39,17 @@ continueUsername.addEventListener('click', function() {
 })
 
 
+// Убирается ошибка при вводе данных
+let inputAge = document.getElementById('age_input')
+inputAge.addEventListener('input', function () {
+    inputAge.style = 'border: none'
+    document.getElementById('error_age').textContent = ''
+})
+
 // Переход от запроса возраста к запросу гендера
 let continueAge = document.getElementById('continue_age')
 continueAge.addEventListener('click', function() {
     // Проверка на ввод возраста
-    let inputAge = document.getElementById('age_input')
     if (inputAge.value === '') {
         document.getElementById('error_age').textContent = 'Это обязательное поле'
         inputAge.style = 'border: 2px solid red'
@@ -57,13 +70,20 @@ continueAge.addEventListener('click', function() {
 })
 
 
+// Убирается ошибка при вводе данных
+let inputGenderMale = document.getElementById('input_male')
+let inputGenderFemale = document.getElementById('input_female')
+inputGenderMale.addEventListener('change', function () {
+    document.getElementById('error_gender').textContent = ''
+})
+inputGenderFemale.addEventListener('change', function () {
+    document.getElementById('error_gender').textContent = ''
+})
+
 // Переход от запроса гендера к запросу города
 let continueGender = document.getElementById('continue_gender')
 continueGender.addEventListener('click', function() {
     // Проверка на выбор пола
-    let inputGenderMale = document.getElementById('input_male')
-    let inputGenderFemale = document.getElementById('input_female')
-
     if (inputGenderMale.checked === false && inputGenderFemale.checked === false) {
         document.getElementById('error_gender').textContent = 'Укажите свой пол'
         return
@@ -75,13 +95,19 @@ continueGender.addEventListener('click', function() {
 })
 
 
+// Убирается ошибка при вводе данных
+let inputCity = document.getElementById('city_input')
+inputCity.addEventListener('input', function () {
+    inputCity.style = 'border: none'
+    document.getElementById('error_city').textContent = ''
+})
+
 // Переход от запроса города к запросу предпочтений
 let continueCity = document.getElementById('continue_city')
 continueCity.addEventListener('click', function() {
-    // Проверка на ввод города
-    let inputCity = document.getElementById('city_input')
-    if (inputCity.value != 'Казань') {
+    if (citySelected === false) {
         document.getElementById('error_city').textContent = 'Выберите город из предложенных'
+        inputCity.style = 'border: 2px solid red'
         return
     }
 
@@ -91,13 +117,24 @@ continueCity.addEventListener('click', function() {
 })
 
 
+// Убирается ошибка при вводе данных
+let inputPreferMale = document.getElementById('input_with_male')
+let inputPreferFemale = document.getElementById('input_with_female')
+let inputPreferEveryone = document.getElementById('input_with_everyone')
+inputPreferMale.addEventListener('change', function () {
+    document.getElementById('error_prefer').textContent = ''
+})
+inputPreferFemale.addEventListener('change', function () {
+    document.getElementById('error_prefer').textContent = ''
+})
+inputPreferEveryone.addEventListener('change', function () {
+    document.getElementById('error_prefer').textContent = ''
+})
+
 // Переход от запроса предпочтений к запросу целей
 let continuePreferences = document.getElementById('continue_preferences')
 continuePreferences.addEventListener('click', function() {
     // Проверка на выбор предпочтений
-    let inputPreferMale = document.getElementById('input_with_male')
-    let inputPreferFemale = document.getElementById('input_with_female')
-    let inputPreferEveryone = document.getElementById('input_with_everyone')
     if (inputPreferMale.checked === false && inputPreferFemale.checked === false && inputPreferEveryone.checked === false) {
         document.getElementById('error_prefer').textContent = 'Укажите предпочтения'
         return
@@ -111,21 +148,6 @@ continuePreferences.addEventListener('click', function() {
 // Переход от запроса целей к запросу О себе
 let continueTarget = document.getElementById('continue_target')
 continueTarget.addEventListener('click', function() {
-    // Проверка на выбор цели
-    let inputTargetCommunication = document.getElementById('communication')
-    let inputTargetParty = document.getElementById('party')
-    let inputTarget18 = document.getElementById('18+')
-    let inputTargetDate = document.getElementById('date')
-    let inputTargetSerious = document.getElementById('serious')
-    if (inputTargetCommunication.checked === false &&
-        inputTargetParty.checked === false &&
-        inputTarget18.checked === false &&
-        inputTargetDate.checked === false &&
-        inputTargetSerious.checked === false ) {
-        document.getElementById('error_target').textContent = 'Укажите хотя бы одну цель'
-        return
-    }
-
     // Переход на следующий вопрос
     document.getElementById('target_form').style.display = 'none'
     document.getElementById('photo_form').style.display = 'block'
@@ -137,7 +159,6 @@ let continuePhoto = document.getElementById('continue_photo')
 continuePhoto.addEventListener('click', function() {
     // Проверка на наличие фото
     let inputPhotos = document.getElementById('photo_input')
-    console.log(inputPhotos.value)
     if (inputPhotos.value === '') {
         document.getElementById('error_photo').textContent = 'Необходимо загрузить фото'
         return
@@ -152,11 +173,29 @@ continuePhoto.addEventListener('click', function() {
 // Обработка нажатия на кнопку регистрации
 let registrateButton = document.getElementById('registrate')
 registrateButton.addEventListener('click', function() {
-    event.preventDefault() // Отмена отправки формы по умолчанию
+    // Проверка на принятие соглашения
+    let inputAgreement = document.getElementById('agreement')
+    if (inputAgreement.checked === false) {
+        document.getElementById('error_agreement').textContent = 'Для регистрации необходимо принять соглашение'
+        return
+    }
+
+    // Отмена отправки формы по умолчанию
+    event.preventDefault()
 
     // Отправка формы
     let form = document.getElementById('form')
     form.submit()
+})
+
+
+let backToBotButton = document.getElementById('back_to_bot')
+backToBotButton.addEventListener('click', function() {
+
+    // Отправка данных в бота
+    let data = {status: 'ok'}
+
+    tg.sendData(JSON.stringify(data));
 
     // Закрытие веб-приложения с регистрацией
     tg.close();
